@@ -13,6 +13,8 @@ class Campo
     const static int SIZE_CAMPO;
     //size of campo = 31
 public:
+    Campo(int campo);
+    Campo(int campo, const char *nombre,char tipo, int longitud, bool llave);
     Campo(fstream & fs);
     static int getSIZE_CAMPO();
     int getCampo() const;
@@ -21,6 +23,9 @@ public:
     void setNombre(char *nombre);
     char getTipo() const;
     void setTipo(char value);
+    int getLongitud() const;
+    void setLongitud(int value);
+    void write(fstream & fs);
 };
 
 #endif // CAMPO_H
