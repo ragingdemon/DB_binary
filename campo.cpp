@@ -7,7 +7,9 @@ using std::endl;
 using std::fstream;
 
 const int Campo::SIZE_CAMPO = sizeof(Campo::campo) + sizeof(Campo::nombre) + sizeof(Campo::tipo) + sizeof(Campo::longitud) + sizeof(Campo::llave);
-//const int Campo::SIZE_CAMPO = sizeof(Campo) - 4;
+const char Campo::STRING = 's';
+const char Campo::INTEGER = 'i';
+const char Campo::DOUBLE= 'd';
 
 Campo::Campo(int campo):
     campo(campo)
@@ -16,12 +18,13 @@ Campo::Campo(int campo):
     cin>>nombre;
     cout<<"Tipo (s/i/d): ";
     cin>>tipo;
-    if (tipo == 's') {
+    if (tipo == STRING) {
         cout<<"longitud del campo: ";
         cin>>longitud;
-    } else if (tipo == 'i') {
+        longitud++;
+    } else if (tipo == INTEGER) {
         longitud = sizeof(int);
-    } else if (tipo == 'd') {
+    } else if (tipo == DOUBLE) {
         longitud = sizeof(double);
     }
     cout<<"Es llave? :";

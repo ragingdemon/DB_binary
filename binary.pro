@@ -7,10 +7,12 @@ SOURCES += main.cpp \
     person.cpp \
     campo.cpp \
     header.cpp \
-    registro.cpp
+    registro.cpp \
+    contenido.cpp
 
 HEADERS += \
     person.h \
     campo.h \
     header.h \
-    registro.h
+    registro.h \
+    contenido.h

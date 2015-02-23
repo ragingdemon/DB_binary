@@ -10,9 +10,12 @@ class Campo
     int longitud; //4
     bool llave; //1
 
-    const static int SIZE_CAMPO;
+    const static int SIZE_CAMPO;   
     //size of campo = 31
 public:
+    const static char STRING;
+    const static char INTEGER;
+    const static char DOUBLE;
     Campo(int campo);
     Campo(int campo, const char *nombre,char tipo, int longitud, bool llave);
     Campo(fstream & fs);
