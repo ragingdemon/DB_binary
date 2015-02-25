@@ -12,11 +12,12 @@ int main()
     char option;
     bool loop;
     do {
-        cout << "Menu\n"
-             <<"1) crear nueva estructura\n"
-            <<"2) listar\n"
-           <<"3) salir\n"
-          <<"respuesta : ";
+        cout <<"Menu\n"
+            <<"1) crear nueva estructura\n"
+           <<"2) Agregar Registro\n"
+          <<"3) Eliminar Registro\n"
+         <<"4) salir\n"
+        <<"respuesta : ";
         cin>>option;
         if(option == '1'){
             Header h;
@@ -30,7 +31,10 @@ int main()
             char archivo[21];
             cin>>archivo;
             Header h(archivo);
+            h.addRegistro(archivo);
             loop = true;
+        }else if (option == '3') {
+
         }else{
             loop = false;
         }

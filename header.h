@@ -2,6 +2,7 @@
 #define HEADER_H
 #include "registro.h"
 #include "campo.h"
+#include "contenido.h"
 #include <fstream>
 
 using std::fstream;
@@ -20,6 +21,11 @@ public:
     int getAvail_list_offset() const;
     int getDatos_offset() const;
     void write(fstream &fs);
+    int getAvailList(fstream &fs);
+    bool setAvailList(fstream &fs, int value);
+    bool addRegistro(const char* file);
+    bool addRegistro(const char* file, Contenido &contenido);
+    bool removeRegistro(const char* file, int rrn);
 };
 
 #endif // HEADER_H

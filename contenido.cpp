@@ -2,6 +2,7 @@
 #include <iostream>
 using std::cout;
 using std::cin;
+using std::endl;
 
 Contenido::Contenido(Registro *registro)
 {
@@ -97,6 +98,7 @@ void Contenido::printContent()
             } else if (campo->getTipo() == Campo::DOUBLE) {
                 printDouble(campo);
             }
+            cout<<endl;
         }
         pointer_content = 0;
     }
@@ -116,10 +118,26 @@ void Contenido::printString(Campo *campo)
 
 void Contenido::printInt(Campo *campo)
 {
-
+    int size_campo = campo->getLongitud();
+    char *value = new char[size_campo];
+    for (int i = 0; i < size_campo; ++i) {
+        value[i] = content[pointer_content + i];
+    }
+    pointer_content += size_campo;
+    int *numbre = (int*) value;
+    cout<<*numbre;
+    delete[] value;
 }
 
 void Contenido::printDouble(Campo *campo)
 {
-
+    int size_campo = campo->getLongitud();
+    char *value = new char[size_campo];
+    for (int i = 0; i < size_campo; ++i) {
+        value[i] = content[pointer_content + i];
+    }
+    pointer_content += size_campo;
+    double *numbre = (double*) value;
+    cout<<*numbre;
+    delete[] value;
 }
