@@ -76,6 +76,7 @@ int Header::getAvailList(fstream &fs)
     if (fs.is_open()) {
         fs.seekg(avail_list_offset);
         fs.read((char*)&head,sizeof(head));
+        fs.seekg(0);
     }else{
         return -2;
     }
@@ -95,7 +96,7 @@ bool Header::setAvailList(fstream &fs, int value)
 
 bool Header::addRegistro(const char *file)
 {
-    fstream fs(file, ios::in|ios::out|ios::binary|ios::app);
+    fstream fs(file, ios::in|ios::out|ios::binary);
     if (fs.is_open()) {
         int avail_list = getAvailList(fs);
         if (avail_list == -1) {
@@ -120,7 +121,7 @@ bool Header::addRegistro(const char *file)
 
 bool Header::addRegistro(const char *file, Contenido &contenido)
 {
-    fstream fs(file, ios::in|ios::out|ios::binary|ios::app);
+    fstream fs(file, ios::in|ios::out|ios::binary);
     if (fs.is_open()) {
     } else {
         return false;
@@ -130,16 +131,36 @@ bool Header::addRegistro(const char *file, Contenido &contenido)
 
 bool Header::removeRegistro(const char *file, int rrn)
 {
-    fstream fs(file, ios::in|ios::out|ios::binary|ios::app);
-    if (fs.is_open()) {
-        int avail_list = getAvailList(fs);
-        fs.seekp(0,ios::end);
-        long file_size = fs.tellp();
+    int avail_list = -2;
+    fstream in(file, ios::in|ios::binary);
+    if (in.is_open()) {
+        avail_list = getAvailList(in);
+    }
+    in.close();
+    std::ofstream out(file, ios::out|ios::binary|ios::trunc);
+    if (out.is_open() && avail_list != -2) {
+        //out.seekp(ios::end);
+        long file_size = out.tellp();
         long offset = datos_offset + rrn * registro->getLongitud();
+        /*
         if (offset > file_size) {
             return false;
         }
-        fs.seekp(offset);
+        */
+        out.seekp(offset);
+        cout<<"puntero: "<<out.tellp()<<endl;
+        out.write("\0",1);
+        cout<<"puntero: "<<out.tellp()<<endl;
+        out.write((char*)&avail_list,sizeof(avail_list));
+        cout<<"puntero: "<<out.tellp()<<endl;
+        out.seekp(avail_list_offset);
+        cout<<"puntero: "<<out.tellp()<<endl;
+        out.write((char*)&rrn,sizeof(avail_list));
+        cout<<"puntero: "<<out.tellp()<<endl;
+        out.close();
+        return true;
+    }else{
+        out.close();
     }
-    return true;
+    return false;
 }

@@ -10,35 +10,36 @@ using namespace std;
 int main()
 {    
     char option;
-    bool loop;
+    Header *h = nullptr;
     do {
         cout <<"Menu\n"
             <<"1) crear nueva estructura\n"
-           <<"2) Agregar Registro\n"
-          <<"3) Eliminar Registro\n"
-         <<"4) salir\n"
+           <<"2) Cargar estructura\n"
+          <<"3) Agregar Registro\n"
+         <<"4) Eliminar Registro\n"
+        <<"5) salir\n"
         <<"respuesta : ";
         cin>>option;
         if(option == '1'){
-            Header h;
-            fstream file(h.getArchivo(),ios::out | ios::binary);
-            h.write(file);
-            file.flush();
+            fstream file(h->getArchivo(),ios::out | ios::binary);
+            h->write(file);
             file.close();
-            loop = true;
         }else if (option == '2') {
             cout<<"nombre del archivo: ";
-            char archivo[21];
+            char archivo[41];
             cin>>archivo;
-            Header h(archivo);
-            h.addRegistro(archivo);
-            loop = true;
-        }else if (option == '3') {
-
-        }else{
-            loop = false;
+            h = new Header(archivo);
+        }else if (option == '3' && h != nullptr) {
+            h->addRegistro(h->getArchivo());
+        }else if (option == '4' && h != nullptr) {
+            int rrn;
+            cout<<"RRN del registro que desea borrar: ";
+            cin>>rrn;
+            h->removeRegistro(h->getArchivo(),rrn);
+        }else if(option == '5'){
+            break;
         }
-    } while (loop);
+    } while (true);
     return 0;
 }
 
