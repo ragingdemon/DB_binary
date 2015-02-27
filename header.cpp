@@ -108,7 +108,15 @@ bool Header::addRegistro(const char *file)
             fs.close();
             return false;
         }else{
-
+            long offset = datos_offset + avail_list * registro->getLongitud();
+            int newHead;
+            fs.seekg(offset+1);
+            fs.read((char*)&newHead,sizeof(newHead));
+            fs.seekg(offset);
+            Contenido contenido(registro);
+            contenido.setContent();
+            contenido.writeContent(fs);
+            setAvailList(fs,newHead);
         }
 
     } else {
@@ -130,37 +138,33 @@ bool Header::addRegistro(const char *file, Contenido &contenido)
 }
 
 bool Header::removeRegistro(const char *file, int rrn)
-{
-    int avail_list = -2;
-    fstream in(file, ios::in|ios::binary);
-    if (in.is_open()) {
-        avail_list = getAvailList(in);
-    }
-    in.close();
-    std::ofstream out(file, ios::out|ios::binary|ios::trunc);
-    if (out.is_open() && avail_list != -2) {
-        //out.seekp(ios::end);
-        long file_size = out.tellp();
+{    
+    fstream fs(file, ios::in|ios::out|ios::binary);
+    if (fs.is_open()) {
+        int avail_list = getAvailList(fs);
+        cout<<"puntero: "<<fs.tellp()<<endl;
+        fs.seekg(ios::end);
+        //long file_size = fs.tellg();
         long offset = datos_offset + rrn * registro->getLongitud();
         /*
         if (offset > file_size) {
             return false;
         }
         */
-        out.seekp(offset);
-        cout<<"puntero: "<<out.tellp()<<endl;
-        out.write("\0",1);
-        cout<<"puntero: "<<out.tellp()<<endl;
-        out.write((char*)&avail_list,sizeof(avail_list));
-        cout<<"puntero: "<<out.tellp()<<endl;
-        out.seekp(avail_list_offset);
-        cout<<"puntero: "<<out.tellp()<<endl;
-        out.write((char*)&rrn,sizeof(avail_list));
-        cout<<"puntero: "<<out.tellp()<<endl;
-        out.close();
+        fs.seekp(offset);
+        fs.write("\0",1);
+        fs.write((char*)&avail_list,sizeof(avail_list));
+        fs.seekp(avail_list_offset);
+        fs.write((char*)&rrn,sizeof(avail_list));
+        fs.close();
         return true;
     }else{
-        out.close();
+        fs.close();
     }
     return false;
+}
+
+bool Header::modRegistro(int rrn)
+{
+
 }

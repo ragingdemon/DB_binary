@@ -26,6 +26,7 @@ public:
     bool addRegistro(const char* file);
     bool addRegistro(const char* file, Contenido &contenido);
     bool removeRegistro(const char* file, int rrn);
+    bool modRegistro(int rrn);
 };
 
 #endif // HEADER_H
