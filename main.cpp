@@ -32,8 +32,11 @@ int main()
             h = new Header(archivo);
         }else if (option == '3' && h != nullptr) {
             h->addRegistro(h->getArchivo());
-        }else if (option == '3' && h != nullptr) {
-            h->addRegistro(h->getArchivo());
+        }else if (option == '4' && h != nullptr) {
+            int rrn;
+            cout<<"RRN del registro que desea modificar: ";
+            cin>>rrn;
+            h->modRegistro(rrn);
         }else if (option == '5' && h != nullptr) {
             int rrn;
             cout<<"RRN del registro que desea borrar: ";

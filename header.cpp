@@ -142,16 +142,11 @@ bool Header::removeRegistro(const char *file, int rrn)
     fstream fs(file, ios::in|ios::out|ios::binary);
     if (fs.is_open()) {
         int avail_list = getAvailList(fs);
-        cout<<"puntero: "<<fs.tellp()<<endl;
-        fs.seekg(ios::end);
-        //long file_size = fs.tellg();
         long offset = datos_offset + rrn * registro->getLongitud();
-        /*
-        if (offset > file_size) {
+        fs.seekp(offset);
+        if (fs.rdstate() & ios::eofbit || !(fs.rdstate() & ios::goodbit)) {
             return false;
         }
-        */
-        fs.seekp(offset);
         fs.write("\0",1);
         fs.write((char*)&avail_list,sizeof(avail_list));
         fs.seekp(avail_list_offset);
@@ -166,5 +161,18 @@ bool Header::removeRegistro(const char *file, int rrn)
 
 bool Header::modRegistro(int rrn)
 {
-
+    fstream fs(archivo, ios::in|ios::out|ios::binary);
+    if (fs.is_open()) {
+        long offset = datos_offset + rrn * registro->getLongitud();
+        fs.seekg(offset);
+        char validar = fs.peek();
+        if (validar == '\0' || fs.rdstate() & ios::eofbit  || !(fs.rdstate() & ios::goodbit)) {
+            return false;
+        }
+        Contenido contenido(registro);
+        contenido.setContent();
+        contenido.writeContent(fs);
+    }
+    fs.close();
+    return true;
 }
