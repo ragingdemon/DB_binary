@@ -98,7 +98,11 @@ void Contenido::printContent()
             } else if (campo->getTipo() == Campo::DOUBLE) {
                 printDouble(campo);
             }
-            cout<<endl;
+            if (i < campos.size()) {
+                cout<<",";
+            } else {
+                cout<<endl;
+            }
         }
         pointer_content = 0;
     }
@@ -112,7 +116,7 @@ void Contenido::printString(Campo *campo)
         value[i] = content[pointer_content + i];
     }
     pointer_content += size_campo;
-    cout<<*value;
+    cout<<value;
     delete[] value;
 }
 

@@ -143,8 +143,11 @@ bool Header::removeRegistro(const char *file, int rrn)
     if (fs.is_open()) {
         int avail_list = getAvailList(fs);
         long offset = datos_offset + rrn * registro->getLongitud();
+        fs.seekg(offset);
         fs.seekp(offset);
-        if (fs.rdstate() & ios::eofbit || !(fs.rdstate() & ios::goodbit)) {
+        char validar = fs.peek();
+        if (validar == '\0' || ((fs.rdstate() & ios::goodbit) != 0)) {
+            fs.close();
             return false;
         }
         fs.write("\0",1);
@@ -166,7 +169,8 @@ bool Header::modRegistro(int rrn)
         long offset = datos_offset + rrn * registro->getLongitud();
         fs.seekg(offset);
         char validar = fs.peek();
-        if (validar == '\0' || fs.rdstate() & ios::eofbit  || !(fs.rdstate() & ios::goodbit)) {
+        if (validar == '\0' || ((fs.rdstate() & ios::goodbit) != 0)) {
+            fs.close();
             return false;
         }
         Contenido contenido(registro);
@@ -175,4 +179,52 @@ bool Header::modRegistro(int rrn)
     }
     fs.close();
     return true;
+}
+
+bool Header::leerRegistro(int rrn)
+{
+    fstream fs(archivo, ios::in|ios::out|ios::binary);
+    if (fs.is_open()) {
+        long offset = datos_offset + rrn * registro->getLongitud();
+        fs.seekg(offset);
+        char validar = fs.peek();
+        if (validar == '\0' || ((fs.rdstate() & ios::goodbit) != 0)) {
+            fs.close();
+            return false;
+        }
+        Contenido contenido(registro);
+        contenido.readContent(fs);
+        contenido.printContent();
+    }
+    fs.close();
+    return true;
+}
+
+void Header::allRegistros()
+{
+    char opcion = 'n';
+    int rrn = 0;
+    bool eof = false;
+    fstream fs(archivo, ios::in|ios::out|ios::binary);
+    if (fs.is_open()) {
+        do {
+
+            for (int i = 0;i < 10; ++i) {
+                long offset = datos_offset + rrn * registro->getLongitud();
+                fs.seekg(offset);
+                char validar = fs.peek();
+                if ((fs.rdstate() & ios::goodbit) != 0) {
+                    eof = true;
+                    break;
+                } else if (validar == '\0') {
+                    continue;
+                }
+                Contenido contenido(registro);
+                contenido.readContent(fs);
+                contenido.printContent();
+            }
+            cout<<"¿Quiere continuar? (y/n): ";
+            cin>>opcion;
+        } while (opcion != 'y' && !eof);
+    }
 }
