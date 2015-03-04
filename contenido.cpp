@@ -98,7 +98,7 @@ void Contenido::printContent()
             } else if (campo->getTipo() == Campo::DOUBLE) {
                 printDouble(campo);
             }
-            if (i < campos.size()) {
+            if (i < campos.size() - 1) {
                 cout<<",";
             } else {
                 cout<<endl;

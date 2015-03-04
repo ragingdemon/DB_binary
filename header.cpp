@@ -146,7 +146,7 @@ bool Header::removeRegistro(const char *file, int rrn)
         fs.seekg(offset);
         fs.seekp(offset);
         char validar = fs.peek();
-        if (validar == '\0' || ((fs.rdstate() & ios::goodbit) != 0)) {
+        if (validar == '\0' || !(fs.rdstate() == ios::goodbit)) {
             fs.close();
             return false;
         }
@@ -169,7 +169,7 @@ bool Header::modRegistro(int rrn)
         long offset = datos_offset + rrn * registro->getLongitud();
         fs.seekg(offset);
         char validar = fs.peek();
-        if (validar == '\0' || ((fs.rdstate() & ios::goodbit) != 0)) {
+        if (validar == '\0' || !(fs.rdstate() == ios::goodbit)) {
             fs.close();
             return false;
         }
@@ -188,7 +188,7 @@ bool Header::leerRegistro(int rrn)
         long offset = datos_offset + rrn * registro->getLongitud();
         fs.seekg(offset);
         char validar = fs.peek();
-        if (validar == '\0' || ((fs.rdstate() & ios::goodbit) != 0)) {
+        if (validar == '\0' || !(fs.rdstate() == ios::goodbit)) {
             fs.close();
             return false;
         }
@@ -213,7 +213,7 @@ void Header::allRegistros()
                 long offset = datos_offset + rrn * registro->getLongitud();
                 fs.seekg(offset);
                 char validar = fs.peek();
-                if ((fs.rdstate() & ios::goodbit) != 0) {
+                if (!(fs.rdstate() == ios::goodbit)) {
                     eof = true;
                     break;
                 } else if (validar == '\0') {
@@ -222,9 +222,14 @@ void Header::allRegistros()
                 Contenido contenido(registro);
                 contenido.readContent(fs);
                 contenido.printContent();
+                rrn++;
             }
-            cout<<"¿Quiere continuar? (y/n): ";
-            cin>>opcion;
-        } while (opcion != 'y' && !eof);
+            if (eof) {
+                cout<<"Llego al final del archivo"<<endl;
+            } else {
+                cout<<"Quiere continuar? (y/n): ";
+                cin>>opcion;
+            }
+        } while (opcion != 'n' && !eof);
     }
 }
