@@ -29,6 +29,7 @@ public:
     bool modRegistro(int rrn);
     bool leerRegistro(int rrn);
     void allRegistros();
+    void compactar();
 };
 
 #endif // HEADER_H

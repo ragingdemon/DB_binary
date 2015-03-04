@@ -233,3 +233,36 @@ void Header::allRegistros()
         } while (opcion != 'n' && !eof);
     }
 }
+
+void Header::compactar()
+{
+    fstream original(archivo, ios::in|ios::out|ios::binary);
+    fstream nuevo("temp", ios::out|ios::binary);
+    int longHeader = datos_offset;
+    int longReg = registro->getLongitud();
+    char hBuff[longHeader];
+    char rbuff[longReg];
+    if (original.is_open()) {
+        //copiar el encabezado
+        //original.read(hBuff,longHeader);
+        //nuevo.write(hBuff,longHeader);
+        //original.seekg(datos_offset);
+        //cout<<hBuff<<endl;
+        write(nuevo);
+        //copiar registros
+        int rrn = 0;
+        while (original.rdstate() == ios::goodbit) {
+            long offset = datos_offset + rrn * registro->getLongitud();
+            original.seekg(offset);
+            char validar = original.peek();
+            if (validar != '\0' && original.rdstate() == ios::goodbit){
+                original.read(rbuff,longReg);
+                nuevo.write(rbuff,longReg);
+            }
+            rrn++;
+        }
+    }
+    original.close();
+    nuevo.close();
+    return;
+}

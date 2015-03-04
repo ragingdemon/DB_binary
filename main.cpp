@@ -55,8 +55,8 @@ int main()
             h->leerRegistro(rrn);
         }else if(option == '7' && h != nullptr){
             h->allRegistros();
-        }else if(option == '8'){
-            break;
+        }else if(option == '8' && h != nullptr){
+            h->compactar();
         }else if(option == '9'){
             break;
         }else if(option == '0'){
