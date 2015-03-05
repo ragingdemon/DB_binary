@@ -9,11 +9,15 @@ using std::fstream;
 class Header
 {
     char archivo[21];
+    char tipo;
     Registro *registro;
     int avail_list_offset;
     int datos_offset;
 public:
-    Header();    
+    const static char NO_INDEX;
+    const static char INDEXL;
+    const static char INDEXB;
+    Header(char tipo);
     Header(const char * nombre);
     ~Header();
     const char* getArchivo()const;

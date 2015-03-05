@@ -11,57 +11,76 @@ int main()
 {    
     char option;
     Header *h = nullptr;
+    char tipo = Header::NO_INDEX;
     do {
         cout <<"Menu\n"
-            <<"1) crear nueva estructura\n"
-           <<"2) Cargar estructura\n"
-          <<"3) Agregar Registro\n"
-         <<"4) Modificar Registro\n"
-        <<"5) Eliminar Registro\n"
-        <<"6) Leer registro\n"
-        <<"7) Listar registros\n"
-        <<"8) Compactar\n"
-        <<"9) Usar indice lineal\n"
-        <<"0) Usar arbol B\n"
-        <<"s) salir\n"
+            <<"a) Crear nueva estructura\n"
+           <<"b) Cargar estructura\n"
+          <<"c) Agregar Registro\n"
+         <<"d) Modificar Registro\n"
+        <<"e) Eliminar Registro\n"
+        <<"f) Leer registro\n"
+        <<"g) Buscar registro\n"
+        <<"h) Listar registros\n"
+        <<"i) Compactar\n"
+        <<"j) Usar indice lineal\n"
+        <<"k) Usar arbol B\n"
+        <<"l) Sin indices\n"
+        <<"m) salir\n"
         <<"respuesta : ";
         cin>>option;
-        if(option == '1'){
-            h = new Header();
+        if(option == 'a'){
+            if(h){
+                delete h;
+                h = nullptr;
+            }
+            h = new Header(tipo);
             fstream file(h->getArchivo(),ios::out | ios::binary);
             h->write(file);
             file.close();
-        }else if (option == '2') {
+        }else if (option == 'b') {
             cout<<"nombre del archivo: ";
             char archivo[41];
             cin>>archivo;
             h = new Header(archivo);
-        }else if (option == '3' && h != nullptr) {
+        }else if (option == 'c' && h != nullptr) {
             h->addRegistro(h->getArchivo());
-        }else if (option == '4' && h != nullptr) {
+        }else if (option == 'd' && h != nullptr) {
             int rrn;
             cout<<"RRN del registro que desea modificar: ";
             cin>>rrn;
             h->modRegistro(rrn);
-        }else if (option == '5' && h != nullptr) {
+        }else if (option == 'e' && h != nullptr) {
             int rrn;
             cout<<"RRN del registro que desea borrar: ";
             cin>>rrn;
             h->removeRegistro(h->getArchivo(),rrn);
-        }else if(option == '6' && h != nullptr){
+        }else if(option == 'f' && h != nullptr){
             int rrn;
             cout<<"RRN del registro que desea leer: ";
             cin>>rrn;
             h->leerRegistro(rrn);
-        }else if(option == '7' && h != nullptr){
+        }else if(option == 'g' && h != nullptr){
+            //buscar
+        }else if(option == 'h' && h != nullptr){
             h->allRegistros();
-        }else if(option == '8' && h != nullptr){
+        }else if(option == 'i' && h != nullptr){
             h->compactar();
-        }else if(option == '9'){
+        }else if(option == 'j'){
+            if(h){
+                delete h;
+                h = nullptr;
+            }
+            tipo = Header::INDEXL;
+        }else if(option == 'k'){
+            if(h){
+                delete h;
+                h = nullptr;
+            }
+            tipo = Header::INDEXB;
+        }else if(option == 'l'){
             break;
-        }else if(option == '0'){
-            break;
-        }else if(option == 's'){
+        }else if(option == 'm'){
             break;
         }
     } while (true);

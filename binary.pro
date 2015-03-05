@@ -8,10 +8,12 @@ SOURCES += main.cpp \
     campo.cpp \
     header.cpp \
     registro.cpp \
-    contenido.cpp
+    contenido.cpp \
+    indexl.cpp
 
 HEADERS += \
     campo.h \
     header.h \
     registro.h \
-    contenido.h
+    contenido.h \
+    indexl.h

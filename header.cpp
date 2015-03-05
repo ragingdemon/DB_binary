@@ -2,21 +2,27 @@
 #include "contenido.h"
 #include <string.h>
 #include <iostream>
+#include <stdio.h>
 using std::cout;
 using std::cin;
 using std::endl;
 using std::fstream;
 using std::ios;
 
-Header::Header()
+const char Header::NO_INDEX = 'n';
+const char Header::INDEXL = 'l';
+const char Header::INDEXB = 'b';
+
+Header::Header(char tipo)
 {
     cout<<"Nombre del archivo: ";
     cin>>archivo;
-    cout<<"Cantidad de campos: ";
+    this->tipo = tipo;
+    cout<<"Cantidad de campos: ";    
     int cantidad_campos;
     cin>>cantidad_campos;
     registro = new Registro(cantidad_campos);
-    avail_list_offset = sizeof(archivo) + sizeof(registro->getCantidad_campos())
+    avail_list_offset = sizeof(archivo) + sizeof(tipo) + sizeof(registro->getCantidad_campos())
             + registro->getCantidad_campos() * Campo::getSIZE_CAMPO();
     datos_offset = avail_list_offset + sizeof(avail_list_offset);
 }
@@ -26,6 +32,7 @@ Header::Header(const char *nombre)
     fstream fs(nombre, ios::in | ios::binary);
     if (fs.is_open()) {
         fs.read(archivo,sizeof(archivo));
+        fs.read(&tipo,sizeof(tipo));
         registro = new Registro(fs);
         avail_list_offset = sizeof(archivo) + sizeof(registro->getCantidad_campos())
                 + registro->getCantidad_campos() * Campo::getSIZE_CAMPO();
@@ -60,6 +67,7 @@ int Header::getDatos_offset() const
 void Header::write(std::fstream &fs)
 {
     fs.write(archivo,sizeof(archivo));
+    fs.write(&tipo,sizeof(tipo));
     registro->write(fs);
     int availList = -1;
     fs.write((char*)&availList,sizeof(avail_list_offset));
@@ -261,8 +269,10 @@ void Header::compactar()
             }
             rrn++;
         }
-    }
+    }    
     original.close();
     nuevo.close();
+    remove(archivo);
+    rename("temp",archivo);
     return;
 }
