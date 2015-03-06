@@ -17,8 +17,8 @@ public:
     const static char NO_INDEX;
     const static char INDEXL;
     const static char INDEXB;
-    Header(char tipo);
-    Header(const char * nombre);
+    Header(char type);
+    Header(const char * nombre, char type);
     ~Header();
     const char* getArchivo()const;
     Registro *getRegistro() const;

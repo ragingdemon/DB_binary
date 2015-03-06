@@ -3,12 +3,13 @@
 #include <sstream>
 #include <fstream>
 #include "header.h"
+#include "indexl.h"
 
 using namespace std;
 
 
 int main()
-{    
+{
     char option;
     Header *h = nullptr;
     char tipo = Header::NO_INDEX;
@@ -39,17 +40,32 @@ int main()
             h->write(file);
             file.close();
         }else if (option == 'b') {
+            if(h){
+                delete h;
+                h = nullptr;
+            }
             cout<<"nombre del archivo: ";
             char archivo[41];
             cin>>archivo;
-            h = new Header(archivo);
+            try {
+                h = new Header(archivo,tipo);
+                cout<<"exito"<<endl;
+            } catch (...) {
+                cout<<"no corresponde el tipo"<<endl;
+            }
         }else if (option == 'c' && h != nullptr) {
             h->addRegistro(h->getArchivo());
         }else if (option == 'd' && h != nullptr) {
             int rrn;
             cout<<"RRN del registro que desea modificar: ";
             cin>>rrn;
-            h->modRegistro(rrn);
+            if (tipo == Header::NO_INDEX) {
+                h->modRegistro(rrn);
+            }else if (tipo == Header::INDEXL) {
+
+            }else if (tipo == Header::INDEXB) {
+
+            }
         }else if (option == 'e' && h != nullptr) {
             int rrn;
             cout<<"RRN del registro que desea borrar: ";

@@ -3,6 +3,8 @@
 #include <string.h>
 #include <iostream>
 #include <stdio.h>
+#include <stdexcept>
+using std::invalid_argument;
 using std::cout;
 using std::cin;
 using std::endl;
@@ -13,11 +15,11 @@ const char Header::NO_INDEX = 'n';
 const char Header::INDEXL = 'l';
 const char Header::INDEXB = 'b';
 
-Header::Header(char tipo)
+Header::Header(char type)
 {
     cout<<"Nombre del archivo: ";
     cin>>archivo;
-    this->tipo = tipo;
+    tipo = type;
     cout<<"Cantidad de campos: ";    
     int cantidad_campos;
     cin>>cantidad_campos;
@@ -27,14 +29,16 @@ Header::Header(char tipo)
     datos_offset = avail_list_offset + sizeof(avail_list_offset);
 }
 
-Header::Header(const char *nombre)
+Header::Header(const char *nombre, char type)
 {
     fstream fs(nombre, ios::in | ios::binary);
     if (fs.is_open()) {
         fs.read(archivo,sizeof(archivo));
         fs.read(&tipo,sizeof(tipo));
+        if(tipo != type)
+            throw invalid_argument("datos insuficientes");
         registro = new Registro(fs);
-        avail_list_offset = sizeof(archivo) + sizeof(registro->getCantidad_campos())
+        avail_list_offset = sizeof(archivo) + sizeof(tipo) + sizeof(registro->getCantidad_campos())
                 + registro->getCantidad_campos() * Campo::getSIZE_CAMPO();
         datos_offset = avail_list_offset + sizeof(avail_list_offset);
     }else{
