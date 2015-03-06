@@ -6,11 +6,17 @@ using std::fstream;
 using std::ios;
 using std::pair;
 
-IndexL::IndexL(Header h)
+IndexL::IndexL(const char *name, Registro *r)
 {
-    std::strcpy(archivo,h.getArchivo());
+    std::strcpy(archivo,name);
     std::strcat(archivo,".idxl");
-    llave = h.getRegistro()->getCampos().at(0);
+    llave = r->getCampos().at(0);
+    read();
+}
+
+IndexL::~IndexL()
+{
+    write();
 }
 
 void IndexL::write()

@@ -3,6 +3,7 @@
 #include "registro.h"
 #include "campo.h"
 #include "contenido.h"
+#include "indexl.h"
 #include <fstream>
 
 using std::fstream;
@@ -13,6 +14,7 @@ class Header
     Registro *registro;
     int avail_list_offset;
     int datos_offset;
+    IndexL *indexL;
 public:
     const static char NO_INDEX;
     const static char INDEXL;

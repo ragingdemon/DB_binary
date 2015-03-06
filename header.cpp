@@ -45,6 +45,11 @@ Header::Header(const char *nombre, char type)
         cout<<"no se abrio el archivo"<<endl;
     }
     fs.close();
+    if (tipo == INDEXL) {
+        indexL = new IndexL(archivo,registro);
+    }else if (tipo == INDEXB) {
+
+    }
 }
 
 Header::~Header()
